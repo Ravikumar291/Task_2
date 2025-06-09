@@ -1,0 +1,152 @@
+// Get form elements (simple way)
+const form = document.getElementById('bookingForm');
+const nameInput = document.getElementById('name');
+const phoneInput = document.getElementById('phone');
+const messageBox = document.getElementById('message');
+const coffeeBtn = document.getElementById('coffeeBtn');
+
+// Cafe Menu Data (10 delicious items!)
+const cafeMenu = [
+    { name: "Cappuccino", price: "₹120", description: "Rich espresso with steamed milk foam" },
+    { name: "Chicken Sandwich", price: "₹180", description: "Grilled chicken with fresh vegetables" },
+    { name: "Chocolate Cake", price: "₹150", description: "Moist chocolate cake with chocolate frosting" },
+    { name: "Masala Chai", price: "₹80", description: "Traditional Indian spiced tea" },
+    { name: "Veg Burger", price: "₹160", description: "Crispy veggie patty with cheese and sauce" },
+    { name: "Cold Coffee", price: "₹140", description: "Iced coffee with whipped cream" },
+    { name: "Pasta Arrabiata", price: "₹220", description: "Spicy tomato pasta with herbs" },
+    { name: "Cheesecake", price: "₹170", description: "Creamy New York style cheesecake" },
+    { name: "Green Tea", price: "₹70", description: "Healthy and refreshing green tea" },
+    { name: "Club Sandwich", price: "₹200", description: "Triple layer sandwich with chicken and veggies" }
+];
+
+// Get menu navigation link
+const menuLink = document.querySelector('a[href="#menu"]');
+
+// Handle form submission
+form.addEventListener('submit', function(e) {
+    e.preventDefault(); // Stop form from refreshing page
+    
+    // Get values
+    const name = nameInput.value.trim();
+    const phone = phoneInput.value.trim();
+    
+    // Simple validation
+    if (name === '') {
+        showMessage('Please enter your name!', 'error');
+        return;
+    }
+    
+    if (phone === '' || phone.length !== 10) {
+        showMessage('Please enter a valid 10-digit phone number!', 'error');
+        return;
+    }
+    
+    // Success message
+    showMessage(`Great! ${name}, your booking is confirmed!`, 'success');
+});
+
+// Coffee button fun
+coffeeBtn.addEventListener('click', function() {
+    showMessage('Have a wonderful day! ☕', 'info');
+});
+
+// Menu functionality
+menuLink.addEventListener('click', function(e) {
+    e.preventDefault(); // Stop default link behavior
+    showMenu();
+});
+
+// Function to display the menu
+function showMenu() {
+    // Hide the booking form
+    const bookingSection = document.querySelector('.content-card');
+    bookingSection.style.display = 'none';
+    
+    // Create menu section
+    createMenuSection();
+}
+
+// Function to create and display menu
+function createMenuSection() {
+    // Check if menu already exists
+    let existingMenu = document.getElementById('menuSection');
+    if (existingMenu) {
+        existingMenu.style.display = 'block';
+        return;
+    }
+    
+    // Create menu container
+    const menuSection = document.createElement('div');
+    menuSection.id = 'menuSection';
+    menuSection.className = 'content-card';
+    
+    // Create menu HTML
+    let menuHTML = `
+        <div class="w-full p-8">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">☕ Our Menu</h2>
+                <p class="text-gray-600">Delicious food and drinks made with love</p>
+                <button id="backToBooking" class="mt-4 bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 rounded-lg transition-colors">
+                    ← Back to Booking
+                </button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    `;
+    
+    // Add each menu item
+    cafeMenu.forEach(item => {
+        menuHTML += `
+            <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow">
+                <div class="flex justify-between items-start mb-2">
+                    <h3 class="text-xl font-semibold text-gray-800">${item.name}</h3>
+                    <span class="text-lg font-bold text-amber-600">${item.price}</span>
+                </div>
+                <p class="text-gray-600">${item.description}</p>
+            </div>
+        `;
+    });
+    
+    menuHTML += `
+            </div>
+        </div>
+    `;
+    
+    menuSection.innerHTML = menuHTML;
+    
+    // Add menu to the page
+    const mainContainer = document.querySelector('.main-container');
+    mainContainer.appendChild(menuSection);
+    
+    // Add back button functionality
+    const backButton = document.getElementById('backToBooking');
+    backButton.addEventListener('click', function() {
+        showBookingForm();
+    });
+}
+
+// Function to show booking form again
+function showBookingForm() {
+    const bookingSection = document.querySelector('.content-card');
+    const menuSection = document.getElementById('menuSection');
+    
+    bookingSection.style.display = 'flex';
+    if (menuSection) {
+        menuSection.style.display = 'none';
+    }
+}
+
+// Function to show messages
+function showMessage(text, type) {
+    messageBox.textContent = text;
+    messageBox.className = 'p-3 mb-4 rounded-lg text-center';
+    
+    if (type === 'error') {
+        messageBox.classList.add('bg-red-100', 'text-red-700');
+    } else if (type === 'success') {
+        messageBox.classList.add('bg-green-100', 'text-green-700');
+    } else if (type === 'info') {
+        messageBox.classList.add('bg-blue-100', 'text-blue-700');
+    }
+    
+    messageBox.classList.remove('hidden');
+}
