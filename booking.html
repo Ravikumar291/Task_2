@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ravi's Cafe - Menu</title>
+    
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter & Playfair Display -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Custom base styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f4; /* stone-100 */
+        }
+        .font-playfair {
+            font-family: 'Playfair Display', serif;
+        }
+        /* Custom scrollbar for the order list */
+        .order-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        .order-list::-webkit-scrollbar-track {
+            background: #e7e5e4; /* stone-200 */
+            border-radius: 10px;
+        }
+        .order-list::-webkit-scrollbar-thumb {
+            background: #a8a29e; /* stone-400 */
+            border-radius: 10px;
+        }
+        .order-list::-webkit-scrollbar-thumb:hover {
+            background: #78716c; /* stone-500 */
+        }
+    </style>
+</head>
+<body class="bg-stone-100">
+
+    <!-- Header & Navigation (Using Flexbox) -->
+    <header class="bg-white shadow-md sticky top-0 z-10">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="font-playfair text-2xl font-bold text-amber-700">
+                <a href="#">Ravi's Cafe</a>
+            </div>
+            <div class="flex items-center space-x-6">
+                <a href="index.html" class="text-gray-600 hover:text-amber-600 transition duration-300">Home</a>
+                <a href="#" class="font-semibold text-amber-600 border-b-2 border-amber-600">Menu</a>
+                <a href="#" class="text-gray-600 hover:text-amber-600 transition duration-300">Contact</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content (Using CSS Grid) -->
+    <!-- The main tag is a grid container. On large screens (lg:), it has 3 columns. -->
+    <main class="container mx-auto p-4 md:p-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Menu Items Section (Spans 2 of 3 columns on large screens) -->
+        <!-- This section is also a grid container for the menu cards. -->
+        <section id="menu-container" class="lg:col-span-2">
+            <h1 class="font-playfair text-4xl font-bold text-gray-800 mb-6">Our Menu</h1>
+            <!-- Menu items will be dynamically inserted here -->
+            <div id="menu-items-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- JS will populate this area with menu item cards -->
+            </div>
+        </section>
+
+        <!-- User's Order Section (Spans 1 of 3 columns on large screens) -->
+        <aside id="order-container" class="lg:col-span-1">
+            <div class="bg-white rounded-2xl shadow-lg p-6 sticky top-28">
+                <h2 class="font-playfair text-3xl font-bold text-gray-800 mb-4">Your Order</h2>
+                <!-- Order items will be dynamically inserted here -->
+                <div id="order-items-list" class="order-list max-h-80 overflow-y-auto pr-2">
+                    <p id="empty-order-message" class="text-gray-500 text-center py-10">Your order list is empty.</p>
+                </div>
+                <!-- Order Total -->
+                <div class="mt-6 pt-4 border-t-2 border-dashed">
+                    <div class="flex justify-between items-center text-xl font-bold">
+                        <span class="text-gray-800">Total:</span>
+                        <span id="order-total" class="text-amber-700">$0.00</span>
+                    </div>
+                    <button class="w-full mt-4 text-white bg-amber-600 hover:bg-amber-700 focus:ring-4 focus:outline-none focus:ring-amber-300 font-semibold rounded-lg text-md px-5 py-3 text-center transition-transform transform hover:scale-105 duration-300">
+                        Place Order
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DATA ---
+            // Cafe menu items data
+            const menuItems = [
+                { id: 1, name: 'Espresso', price: 2.50, image: 'https://placehold.co/400x300/a16207/ffffff?text=Espresso' },
+                { id: 2, name: 'Cappuccino', price: 3.50, image: 'https://placehold.co/400x300/a16207/ffffff?text=Cappuccino' },
+                { id: 3, name: 'Samosa Chaat', price: 5.00, image: 'https://placehold.co/400x300/a16207/ffffff?text=Samosa+Chaat' },
+                { id: 4, name: 'Masala Chai', price: 3.00, image: 'https://placehold.co/400x300/a16207/ffffff?text=Masala+Chai' },
+                { id: 5, name: 'Paneer Sandwich', price: 6.50, image: 'https://placehold.co/400x300/a16207/ffffff?text=Paneer+Sandwich' },
+                { id: 6, name: 'Chocolate Muffin', price: 2.75, image: 'https://placehold.co/400x300/a16207/ffffff?text=Muffin' },
+                { id: 7, name: 'Mango Lassi', price: 4.50, image: 'https://placehold.co/400x300/a16207/ffffff?text=Mango+Lassi' },
+                { id: 8, name: 'Vegetable Pakora', price: 4.00, image: 'https://placehold.co/400x300/a16207/ffffff?text=Pakora' },
+                { id: 9, name: 'Iced Latte', price: 4.00, image: 'https://placehold.co/400x300/a16207/ffffff?text=Iced+Latte' },
+                { id: 10, name: 'Gulab Jamun', price: 3.25, image: 'https://placehold.co/400x300/a16207/ffffff?text=Gulab+Jamun' },
+            ];
+            
+            // User's current order list
+            let userOrder = [];
+
+            // --- DOM ELEMENTS ---
+            const menuGrid = document.getElementById('menu-items-grid');
+            const orderList = document.getElementById('order-items-list');
+            const orderTotalEl = document.getElementById('order-total');
+            const emptyOrderMessage = document.getElementById('empty-order-message');
+
+            // --- RENDER FUNCTIONS ---
+
+            /**
+             * Renders all menu items to the page.
+             */
+            function renderMenu() {
+                menuGrid.innerHTML = ''; // Clear existing items
+                menuItems.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'bg-white rounded-xl shadow-lg overflow-hidden flex flex-col transition-transform transform hover:-translate-y-1';
+                    card.innerHTML = `
+                        <img src="${item.image}" alt="${item.name}" class="w-full h-48 object-cover">
+                        <div class="p-4 flex flex-col flex-grow">
+                            <div class="flex justify-between items-baseline mb-2">
+                                <h3 class="text-xl font-bold text-gray-800">${item.name}</h3>
+                                <p class="text-lg font-semibold text-amber-700">$${item.price.toFixed(2)}</p>
+                            </div>
+                            <button data-id="${item.id}" class="add-to-order-btn mt-auto w-full text-amber-800 bg-amber-100 hover:bg-amber-200 font-semibold rounded-lg text-sm px-4 py-2 text-center transition duration-300">
+                                Add to Order
+                            </button>
+                        </div>
+                    `;
+                    menuGrid.appendChild(card);
+                });
+            }
+
+            /**
+             * Renders the user's order list and updates the total.
+             */
+            function renderOrder() {
+                orderList.innerHTML = ''; // Clear existing list
+                
+                if (userOrder.length === 0) {
+                    orderList.appendChild(emptyOrderMessage);
+                    emptyOrderMessage.style.display = 'block';
+                } else {
+                    emptyOrderMessage.style.display = 'none';
+                    userOrder.forEach((item, index) => {
+                        const listItem = document.createElement('div');
+                        listItem.className = 'flex justify-between items-center py-3 border-b border-stone-200';
+                        listItem.innerHTML = `
+                            <div>
+                                <p class="font-semibold text-gray-700">${item.name}</p>
+                                <p class="text-sm text-gray-500">$${item.price.toFixed(2)}</p>
+                            </div>
+                            <button data-index="${index}" class="remove-from-order-btn text-red-500 hover:text-red-700 font-bold p-1 rounded-full">
+                                &times;
+                            </button>
+                        `;
+                        orderList.appendChild(listItem);
+                    });
+                }
+                
+                // Calculate and display total
+                const total = userOrder.reduce((sum, item) => sum + item.price, 0);
+                orderTotalEl.textContent = `$${total.toFixed(2)}`;
+            }
+
+            // --- EVENT HANDLERS ---
+            
+            // Use event delegation for adding items
+            menuGrid.addEventListener('click', (event) => {
+                if (event.target.classList.contains('add-to-order-btn')) {
+                    const itemId = parseInt(event.target.getAttribute('data-id'));
+                    const itemToAdd = menuItems.find(item => item.id === itemId);
+                    if (itemToAdd) {
+                        userOrder.push(itemToAdd);
+                        renderOrder();
+                    }
+                }
+            });
+
+            // Use event delegation for removing items
+            orderList.addEventListener('click', (event) => {
+                if (event.target.classList.contains('remove-from-order-btn')) {
+                    const itemIndex = parseInt(event.target.getAttribute('data-index'));
+                    userOrder.splice(itemIndex, 1);
+                    renderOrder();
+                }
+            });
+
+            // --- INITIALIZATION ---
+            renderMenu();
+            renderOrder();
+        });
+    </script>
+
+</body>
+</html>
